@@ -4,3 +4,16 @@
 /* body {
     background-color: skyblue;
 } */
+
+.toggle-switch {
+    position: relative;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+.toggle-input:checked + .toggle-bg {
+    background-color: #3b82f6; /* Tailwind blue-600 */
+}
+.toggle-input:checked + .toggle-bg .toggle-thumb {
+    transform: translateX(100%); /* Slide to the right */
+}
+

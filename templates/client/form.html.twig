@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GES_DETTES
+{% endblock %}
+
+{% block body %}
+
+<div class="w-full flex justify-center gap-5 flex-row p-6">
+    <div class="w-4/5 bg-gray-800 text-white p-6 rounded-lg shadow-md h-fit">
+        <h2 class="text-lg font-semibold">Add Client</h2>
+        {% form_theme formClient 'form.theme.html.twig' %}
+        {{ form_start(formClient, {'action': path('clients.store'), 'method': 'POST', 'attr': {'class': 'space-y-4'}}) }}
+
+        <div>
+            {{ form_row(formClient.nom) }}
+        </div>
+        <div>
+            {{ form_row(formClient.addresse) }}
+        </div>
+        <div>
+            {{ form_row(formClient.telephone) }}
+        </div>
+
+        <div class="flex items-center">
+            <label for="creerCompte" class="mr-2 cursor-pointer flex flex-row justify-center gap-4">
+                <h2 class="text-lg font-semibold">Add User</h2>
+                <input type="checkbox" id="creerCompte" name="creerCompte" class="sr-only toggle-input"/>
+                <div class="relative w-11 h-6 bg-gray-200 rounded-full transition-colors duration-300 ease-in-out toggle-bg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:bg-blue-600">
+                    <div class="absolute top-0 left-0 w-5 h-5 bg-white border border-gray-300 rounded-full transition-transform duration-300 ease-in-out toggle-thumb peer-checked:translate-x-5"></div>
+                </div>
+            </label>
+        </div>
+    
+        <div id="userFields" class="mt-4 hidden">
+            {{ form_row(formUser.login) }}
+            {{ form_row(formUser.password) }}
+        </div>
+
+        {{ form_end(formClient) }}
+    </div>
+</div>
+
+<script>
+    const checkbox = document.getElementById('creerCompte');
+    const userFields = document.getElementById('userFields');
+
+    function toggleUserFields() {
+        const userInputs = userFields.querySelectorAll('input');
+        
+        if (checkbox.checked) {
+            userFields.classList.remove('hidden');
+            userInputs.forEach(input => input.setAttribute('required', 'required'));
+        } else {
+            userFields.classList.add('hidden');
+            userInputs.forEach(input => input.removeAttribute('required'));
+        }
+    }
+
+    toggleUserFields();
+
+    checkbox.addEventListener('change', toggleUserFields);
+</script>
+
+
+{% endblock %}
