@@ -25,9 +25,17 @@ class Dette
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'dettes')]
+    #[ORM\ManyToOne(inversedBy: 'dettes')]   
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+
+    }
+
 
     public function getId(): ?int
     {

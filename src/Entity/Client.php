@@ -6,8 +6,13 @@ use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use Synfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
+
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[UniqueEntity( fields: ['telephone'], message: 'Ce numero est deja utiliser')]
 class Client
 {
     #[ORM\Id]
@@ -16,9 +21,10 @@ class Client
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    // #[Assert\NotBlank(message: 'Le nom est obligatoire')]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50,unique: true)]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 50)]
@@ -33,15 +39,19 @@ class Client
     #[ORM\OneToOne(inversedBy: 'client', cascade: ['persist', 'remove'])]
     private ?Users $users = null;
 
+
     /**
      * @var Collection<int, Dette>
      */
-    #[ORM\OneToMany(targetEntity: Dette::class, mappedBy: 'client', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Dette::class, mappedBy: 'client', orphanRemoval: true,cascade: ['persist'])]
     private Collection $dettes;
 
     public function __construct()
     {
         $this->dettes = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+
     }
 
     public function getId(): ?int

@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-class Users
+class Users implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +17,7 @@ class Users
     #[ORM\Column(length: 50)]
     private ?string $login = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -30,6 +31,14 @@ class Users
 
     #[ORM\OneToOne(mappedBy: 'users', cascade: ['persist', 'remove'])]
     private ?Client $client = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->isBlocked = false;
+
+    }
 
     public function getId(): ?int
     {

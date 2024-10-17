@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter Dette{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-lg mx-auto mt-10 bg-gray-800 p-6 rounded-lg text-white">
+        <h2 class="text-lg font-semibold text-white mb-4">Ajouter Dette pour {{ client.nom }}</h2>
+        {% form_theme formDette 'form.theme.html.twig' %}
+        {{ form_start(formDette) }}
+            {{ form_row(formDette.montant, {'attr': {'class': 'w-full p-2 rounded-lg'}}) }}
+            {{ form_row(formDette.montantVerser, {'attr': {'class': 'w-full p-2 rounded-lg'}}) }}
+        {{ form_end(formDette) }}
+    </div>
+{% endblock %}

@@ -5,11 +5,15 @@ namespace App\Form;
 use App\Entity\Client;
 use App\Entity\Users;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Regex;
+
 
 class ClientTelephoneType extends AbstractType
 {
@@ -19,6 +23,11 @@ class ClientTelephoneType extends AbstractType
             ->add('telephone', TextType::class, [
                 'attr' => ['class' => 'border w-full p-2 rounded-lg '],
                 'label' => 'Telephone:',
+                'constraints' => [
+                    new NotBlank([ 'message' => 'Le Telephone est obligatoire' ]),
+                    // new NotNull( [ 'message' => 'Le Telephone est non null' ]),
+                ],
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Search',
@@ -31,6 +40,7 @@ class ClientTelephoneType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Client::class,
+            'validation_groups' => false,
         ]);
     }
 }

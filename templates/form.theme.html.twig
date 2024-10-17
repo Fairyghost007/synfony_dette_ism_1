@@ -1,6 +1,7 @@
 {% block form_row %}
 <div class="mb-4">
     {{ form_label(form) }}
+    
     {% if form.vars.block_prefixes|last == 'checkbox' %}
     <label class="flex items-center cursor-pointer">
         {{ form_widget(form, { attr: { class: 'hidden toggle-checkbox-input' } }) }}
@@ -10,8 +11,18 @@
         </div>
     </label>
     {% else %}
-    {{ form_widget(form, { attr: { class: 'mt-1 block w-full px- py-2 border border-gray-300 rounded-md shadow-sm text-black' } }) }}
+    {% set inputClass = 'mt-1 block w-full px- py-2 border border-gray-300 rounded-md shadow-sm text-black' %}
+    {% if form.vars.errors|length > 0 %}
+        {% set inputClass = inputClass ~ ' border-red-500 bg-red-500' %}
     {% endif %}
-    {{ form_errors(form) }}
+    
+    {{ form_widget(form, { attr: { class: inputClass } }) }}
+    {% endif %}
+    
+    {% if form_errors(form) %}
+    <div class="text-red-500">
+        {{ form_errors(form) }}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
