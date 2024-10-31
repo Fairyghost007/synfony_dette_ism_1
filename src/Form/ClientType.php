@@ -58,10 +58,27 @@ class ClientType extends AbstractType
                 'constraints' => [
                     new NotBlank([ 'message' => 'L\'addresse est obligatoire' ]),
                     // new NotNull( [ 'message' => 'L\'addresse est non null' ]),
+                    
                 ],
                 'label' => 'Addresse:',
                 'required' => false,
 
+            ])
+            ->add('email', TextType::class, [
+                'attr' => [
+                    'class' => 'border w-full p-2 rounded-lg text-black',
+                    'placeholder' => 'Enter l\'email',
+                ],
+                'constraints' => [
+                    new NotBlank([ 'message' => 'L\'email est obligatoire' ]),
+                    // new NotNull( [ 'message' => 'L\'email est non null' ]),
+                    new Regex(
+                        '/^[a-zA-Z0-9._%+-]+@gmail\.com$/',
+                        'Email doit etre sous la forme xxx@gmail.com'
+                    )
+                ],  
+                'label' => 'Email:',
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Save',

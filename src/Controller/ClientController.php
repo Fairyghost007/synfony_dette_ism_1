@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Client; // Import the Client entity
+use App\Entity\Client;
 use App\Entity\Users; 
-use App\Entity\Dette; // Import the Client entity
+use App\Entity\Dette; 
 use App\Form\ClientType;
 use App\Form\UserType;
 use App\Form\ClientTelephoneType;
@@ -15,6 +15,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
+
+
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 
 class ClientController extends AbstractController
 {
@@ -69,7 +77,7 @@ public function index(Request $request, ClientRepository $clientRepository): Res
     // }
 
     #[Route('/client/store', name: 'clients.store', methods: ['GET', 'POST'])]
-public function store(Request $request, EntityManagerInterface $entityManager): Response
+public function store(Request $request, EntityManagerInterface $entityManager,UserPasswordHasherInterface $encoder): Response
 {
     $client = new Client();
     $user = new Users(); 
@@ -85,6 +93,12 @@ public function store(Request $request, EntityManagerInterface $entityManager): 
                     // dd($user);
                     dump($formUser->getData());
                     $entityManager->persist($user);
+                    $plainPassword = $user->getPassword();
+                    $hashedPassword = $encoder->hashPassword(
+                        $user, 
+                        $user->getPassword()
+                    );
+                    $user->setPassword($hashedPassword);
                     $client->setUsers($user); 
                     // dd($client);
             }
@@ -94,6 +108,31 @@ public function store(Request $request, EntityManagerInterface $entityManager): 
 
         $entityManager->persist($client);
         $entityManager->flush();
+        $transport = Transport::fromDsn('smtp://biranenini6762@gmail.com:ffjy%20huac%20artx%20yiuz@smtp.gmail.com:587?encryption=tls&auth_mode=login');
+        $mailer = new Mailer($transport);
+        $email = (new Email())
+        ->from('biranenini6762@gmail.com')
+        ->to($client->getEmail())
+        ->subject('Your Symfony Account Credentials')
+        // ->html('<h1>Welcome to Symfony</h1><p>Login: ' . $user->getLogin() . '</p><p>Password: ' . $user->getPassword() . '</p>');
+        ->html($this->renderView('email/credential.html.twig', [
+            'user' => $user,
+            'client' => $client,
+            'login' => $user->getLogin(),
+            'password' =>$plainPassword,
+
+        ]));
+    
+
+
+        // $mailer->send($email);
+        try {
+            $mailer->send($email);
+            // dd("Email sent successfully! Subject: " . $email->getSubject());
+            $this->addFlash('success', 'Email sent successfully!');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Email could not be sent: ' . $e->getMessage());
+        }
 
         return $this->redirectToRoute('clients.index');
     }
@@ -119,6 +158,7 @@ public function listDettes($id, ClientRepository $clientRepository): Response
     foreach ($dettes as $dette) {
         $totalMontantDette += $dette->getMontant();
     }
+    
 
     return $this->render('client/dettes.html.twig', [
         'client' => $client,

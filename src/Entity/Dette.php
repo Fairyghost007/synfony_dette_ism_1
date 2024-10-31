@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+use App\enums\Status;
 
 use App\Repository\DetteRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,10 +30,15 @@ class Dette
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
+    // #[ORM\Column(type: 'string', enumType: Status::class)] 
+    // private Status $status = Status::NONSOLDER;  
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        // $this->status = Status::NonSolde; 
 
     }
 
@@ -101,4 +107,23 @@ class Dette
 
         return $this;
     }
+    // public function getStatus(): ?Status
+    // {
+    //     return $this->status;
+    // }
+
+    // public function setStatus(?Status $status): static
+    // {
+    //     $this->status = $status ?? Status::NonSolde;
+    //     return $this;
+    // }
+    
+    // private function updateStatus(): void
+    // {
+    //     if ($this->montant - $this->montantVerser === 0) {
+    //         $this->setStatus(Status::Solde);
+    //     } else {
+    //         $this->setStatus(Status::NonSolde);
+    //     }
+    // }
 }

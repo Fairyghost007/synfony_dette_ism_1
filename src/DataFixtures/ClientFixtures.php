@@ -23,11 +23,12 @@ class ClientFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             $client = new Client();
             $client->setNom('Nom ' . $i);
             $client->setTelephone('77000000' . $i);
             $client->setAddresse('Adresse ' . $i);  
+            $client->setEmail('client' . $i . '@gmail.com');
             if ($i % 2 == 0) {
 
                 $user= new Users();

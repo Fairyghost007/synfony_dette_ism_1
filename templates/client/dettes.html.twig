@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Client Debts{% endblock %}
+{% block title %}Client Debts
+{% endblock %}
 
 {% block body %}
 	<div class="w-full flex justify-center gap-5 p-6">
 		<div class="flex flex-col gap-4 justify-center w-full h-fit p-2 rounded-lg bg-gray-800">
-			<div class="p-8 mb-8 rounded-lg  bg-gray-700 border border-gray-600" >
+			<div class="p-8 mb-8 rounded-lg  bg-gray-700 border border-gray-600">
 				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					<div class="stat-card rounded-lg p-6 text-white bg-white bg-opacity-10 border border-white border-opacity-50  backdrop-blur-md hover:-translate-y-2  hover:ease hover:delay-100 transition-all duration-100 shadow-lg hover:shadow-slate-600">
 						<div class="flex items-center mb-4 gap-1">
@@ -14,12 +15,13 @@
 							</div>
 							<h3 class="text-lg font-semibold">Nombres de Dettes</h3>
 						</div>
-						<p class="text-3xl font-bold mb-2"> {{totalDette}}</p>
+						<p class="text-3xl font-bold mb-2">
+							{{totalDette}}</p>
 						{# <div class="flex items-center text-sm">
-							<i class="fas fa-arrow-up mr-1 text-green-400"></i>
-							<span class="text-green-400">3.5%</span>
-							<span class="ml-2 text-gray-300">depuis le mois dernier</span>
-						</div> #}
+																			<i class="fas fa-arrow-up mr-1 text-green-400"></i>
+																			<span class="text-green-400">3.5%</span>
+																			<span class="ml-2 text-gray-300">depuis le mois dernier</span>
+																		</div> #}
 					</div>
 
 					<div class="stat-card rounded-lg p-6 text-white bg-white bg-opacity-10 border border-white border-opacity-50  hover:-translate-y-2  hover:ease hover:delay-100 transition-all duration-100 shadow-lg hover:shadow-slate-600">
@@ -29,12 +31,13 @@
 							</div>
 							<h3 class="text-lg font-semibold">Total Dettes</h3>
 						</div>
-						<p class="text-3xl font-bold mb-2">{{totalMontantDette}} FCFA</p>
+						<p class="text-3xl font-bold mb-2">{{totalMontantDette}}
+							FCFA</p>
 						{# <div class="flex items-center text-sm">
-							<i class="fas fa-arrow-up mr-1 text-green-400"></i>
-							<span class="text-green-400">5%</span>
-							<span class="ml-2 text-gray-300">depuis la semaine dernière</span>
-						</div> #}
+																			<i class="fas fa-arrow-up mr-1 text-green-400"></i>
+																			<span class="text-green-400">5%</span>
+																			<span class="ml-2 text-gray-300">depuis la semaine dernière</span>
+																		</div> #}
 					</div>
 
 					<div class="stat-card rounded-lg p-6 text-white bg-white bg-opacity-10 border border-white border-opacity-50  hover:-translate-y-2  hover:ease hover:delay-100 transition-all duration-100 shadow-lg hover:shadow-slate-600">
@@ -46,24 +49,24 @@
 						</div>
 						<p class="text-3xl font-bold mb-2">5</p>
 						{# <div class="flex items-center text-sm">
-							<i class="fas fa-arrow-up mr-1 text-green-400"></i>
-							<span class="text-green-400">10%</span>
-							<span class="ml-2 text-gray-300">depuis hier</span>
-						</div> #}
+																			<i class="fas fa-arrow-up mr-1 text-green-400"></i>
+																			<span class="text-green-400">10%</span>
+																			<span class="ml-2 text-gray-300">depuis hier</span>
+																		</div> #}
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="border-b border-gray-500 border-solid flex justify-between flex-row items-center pb-3 p-2 mb-1">
-				<h2 class="text-lg font-semibold text-white">Dettes De {{ client.nom }}</h2>
+				<h2 class="text-lg font-semibold text-white">Dettes De
+					{{ client.nom }}</h2>
 
 				<div class="relative flex items-center gap-8">
 					<span class="text-white font-semibold underline cursor-pointer">Non Solde</span>
 
 					<label class="relative inline-flex items-center cursor-pointer">
-						<input type="checkbox" id="toggleSolde" class="sr-only toggle-input" />
-						<div class="relative w-11 h-6 bg-gray-200 rounded-full transition-colors duration-300 ease-in-out toggle-bg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:bg-blue-600">
-						</div>
+						<input type="checkbox" id="toggleSolde" class="sr-only toggle-input"/>
+						<div class="relative w-11 h-6 bg-gray-200 rounded-full transition-colors duration-300 ease-in-out toggle-bg peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:bg-blue-600"></div>
 					</label>
 
 					<span class="text-white font-semibold cursor-pointer">Solde</span>
@@ -82,47 +85,64 @@
 							<th class="py-3 px-6">Montant Restant</th>
 						</tr>
 					</thead>
+					{% set hasNonSoldeDette = false %}
+					{% set hasSoldeDette = false %}
+
 					<tbody id="detteTableBody">
 						{% for dette in dettes %}
+							{% if dette.montant - dette.montantVerser != 0 %}
+								{% set hasNonSoldeDette = true %}
+							{% endif %}
+							{% if dette.montant - dette.montantVerser == 0 %}
+								{% set hasSoldeDette = true %}
+							{% endif %}
 							<tr class="bg-white border-b" data-status="{{ dette.montant - dette.montantVerser == 0 ? 'solde' : 'non-solde' }}">
 								<td class="py-4 px-6">{{ dette.montant }}</td>
 								<td class="py-4 px-6">{{ dette.montantVerser }}</td>
 								<td class="py-4 px-6">{{ dette.montant - dette.montantVerser }}</td>
 							</tr>
-						{% else %}
-							<tr>
-								<td colspan="3" class="py-4 px-6 text-center">No debts found for this client.</td>
-							</tr>
 						{% endfor %}
+
+						{% if not hasNonSoldeDette  %}
+							<tr data-status="non-solde">
+								<td colspan="3" class="py-4 px-6 text-center">No debts non solder found for this client.</td>
+							</tr>
+						{% endif %}
+						{% if not hasSoldeDette %}
+							<tr data-status="solde">
+								<td colspan="3" class="py-4 px-6 text-center">No dette solder  found for this client.</td>
+							</tr>
+						{% endif %}
 					</tbody>
+
+
 				</table>
 			</div>
 		</div>
 	</div>
 
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const toggleSolde = document.getElementById('toggleSolde');
-			const detteRows = document.querySelectorAll('#detteTableBody tr');
+		document.addEventListener('DOMContentLoaded', function () {
+const toggleSolde = document.getElementById('toggleSolde');
+const detteRows = document.querySelectorAll('#detteTableBody tr');
 
-			function updateTableDisplay() {
-				const showSolde = toggleSolde.checked;
-				
-				detteRows.forEach(row => {
-					const isSolde = row.dataset.status === 'solde';
-					if (showSolde) {
-						row.style.display = isSolde ? '' : 'none';
-					} else {
-						row.style.display = !isSolde ? '' : 'none';
-					}
-				});
-			}
+function updateTableDisplay() {
+const showSolde = toggleSolde.checked;
 
-			updateTableDisplay();
+detteRows.forEach(row => {
+const isSolde = row.dataset.status === 'solde';
+if (showSolde) {
+row.style.display = isSolde ? '' : 'none';
+} else {
+row.style.display = ! isSolde ? '' : 'none';
+}
+});
+}
 
-			toggleSolde.addEventListener('change', updateTableDisplay);
-		});
+updateTableDisplay();
+
+toggleSolde.addEventListener('change', updateTableDisplay);
+});
 	</script>
 
 {% endblock %}
-

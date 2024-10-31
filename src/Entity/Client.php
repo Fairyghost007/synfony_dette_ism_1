@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Synfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
 
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -36,15 +36,24 @@ class Client
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'client', cascade: ['persist', 'remove'])]
-    private ?Users $users = null;
+    // 
+    
 
+
+    
 
     /**
      * @var Collection<int, Dette>
      */
     #[ORM\OneToMany(targetEntity: Dette::class, mappedBy: 'client', orphanRemoval: true,cascade: ['persist'])]
     private Collection $dettes;
+
+    #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
+    private ?Users $users = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
+
 
     public function __construct()
     {
@@ -119,17 +128,17 @@ class Client
         return $this;
     }
 
-    public function getUsers(): ?Users
-    {
-        return $this->users;
-    }
+    // public function getUsers(): ?Users
+    // {
+    //     return $this->users;
+    // }
 
-    public function setUsers(?Users $users): static
-    {
-        $this->users = $users;
+    // public function setUsers(?Users $users): static
+    // {
+    //     $this->users = $users;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Dette>
@@ -160,4 +169,41 @@ class Client
 
         return $this;
     }
+
+    public function getUsers(): ?Users
+    {
+        return $this->users;
+    }
+
+    public function setUsers(?Users $users): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($users === null && $this->users !== null) {
+            $this->users->setClient(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($users !== null && $users->getClient() !== $this) {
+            $users->setClient($this);
+        }
+
+        $this->users = $users;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+
+   
 }
