@@ -80,6 +80,7 @@
 				<table class="w-full text-sm text-left text-gray-500">
 					<thead class="text-lg text-gray-700 uppercase bg-gray-200">
 						<tr>
+							<th class="py-3 px-6">Date</th>
 							<th class="py-3 px-6">Montant Total</th>
 							<th class="py-3 px-6">Montant Verser</th>
 							<th class="py-3 px-6">Montant Restant</th>
@@ -97,6 +98,7 @@
 								{% set hasSoldeDette = true %}
 							{% endif %}
 							<tr class="bg-white border-b" data-status="{{ dette.montant - dette.montantVerser == 0 ? 'solde' : 'non-solde' }}">
+								<td class="py-4 px-6">{{ dette.createdAt|date("d/m/Y") }}</td>
 								<td class="py-4 px-6">{{ dette.montant }}</td>
 								<td class="py-4 px-6">{{ dette.montantVerser }}</td>
 								<td class="py-4 px-6">{{ dette.montant - dette.montantVerser }}</td>

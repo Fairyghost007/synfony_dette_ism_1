@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}GES_DETTES - Add Article{% endblock %}
+
+{% block body %}
+
+<div class="w-full flex justify-center gap-5 flex-row p-6">
+    <div class="w-4/5 bg-gray-800 text-white p-6 rounded-lg shadow-md h-fit">
+        <h2 class="text-lg font-semibold">Add Article</h2>
+        {% form_theme formArticle 'form.theme.html.twig' %}
+        {{ form_start(formArticle, {'action': path('articles.store'), 'method': 'POST', 'attr': {'class': 'space-y-4'}}) }}
+
+        <div>
+            {{ form_row(formArticle.libelle) }}
+        </div>
+        <div>
+            {{ form_row(formArticle.prix) }}
+        </div>
+        <div>
+            {{ form_row(formArticle.qteStock) }}
+        </div>
+
+        {{ form_end(formArticle) }}
+    </div>
+</div>
+
+{% endblock %}
